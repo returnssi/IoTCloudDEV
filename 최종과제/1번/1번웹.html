@@ -1,0 +1,193 @@
+<html> <!-- css 선언-->
+  <style type="text/css"> 
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritance from `body` */
+  background-color: #fff;
+  border: .05rem solid #fff;
+}
+
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+  height: 100%;
+  background-color: #333;
+}
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  color: #fff;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+.cover-container {
+  max-width: 42em;
+}
+
+
+/*
+ * Header
+ */
+.masthead {
+  margin-bottom: 2rem;
+}
+
+.masthead-brand {
+  margin-bottom: 0;
+}
+
+.nav-masthead .nav-link {
+  padding: .25rem 0;
+  font-weight: 700;
+  color: rgba(255, 255, 255, .5);
+  background-color: transparent;
+  border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+  border-bottom-color: rgba(255, 255, 255, .25);
+}
+
+.nav-masthead .nav-link + .nav-link {
+  margin-left: 1rem;
+}
+
+.nav-masthead .active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+@media (min-width: 48em) {
+  .masthead-brand {
+    float: left;
+  }
+  .nav-masthead {
+    float: right;
+  }
+}
+
+
+/*
+ * Cover
+ */
+.cover {
+  padding: 0 1.5rem;
+}
+.cover .btn-lg {
+  padding: .75rem 1.25rem;
+  font-weight: 700;
+}
+
+
+/*
+ * Footer
+ */
+.mastfoot {
+  color: rgba(255, 255, 255, .5);
+}
+
+</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> <!-- css, bootstrap등을 연결하기위해 필요함 -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <title>LED On / Off</title>
+
+
+    <body> 
+      <!-- Main Content -->
+      <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+          
+        </header>
+      
+        <main role="main" class="inner cover">
+          <h1 class="cover-heading">전구 원격 리모트</h1>
+          <p class="lead">전구를 보다 쉽게 조종할 수 있습니다! [최영환(201412424)]</p>
+          <h4 id="LEDstate"></h4> <!-- LED 상태를 표시함 -->
+          <p class="lead">
+            <button type="button" onclick="onFunction();" class="btn btn-lg btn-secondary">켜주세요</button>
+            <button type="button" onclick="offFunction();" class="btn btn-lg btn-secondary">꺼주세요</button>
+          </p>
+        </main>
+      
+        <footer class="mastfoot mt-auto">
+          <div class="inner">
+            <p>Dev By Choe yeong hwan</p>
+          </div>
+        </footer>
+      </div>
+      <!-- Main Content End-->
+
+        
+
+           <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script> <!-- 파이어베이스 연결을 위해 필요함 -->
+           <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-analytics.js"></script>
+           <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+             <script>  // 파이어베이스 세팅
+                 var firebaseConfig = {
+                  apiKey: "AIzaSyBsId_fkenCb4OVmyJ6JtbPsEif3aklLUs",
+                  authDomain: "sensorfirebase-a3c65.firebaseapp.com",
+                  databaseURL: "https://sensorfirebase-a3c65.firebaseio.com",
+                  projectId: "sensorfirebase-a3c65",
+                  storageBucket: "sensorfirebase-a3c65.appspot.com",
+                  messagingSenderId: "234202372340",
+                  appId: "1:234202372340:web:4205dd74738d89066ea6a1",
+                  measurementId: "G-CCD2JD6DZ7"
+               };
+               // Initialize Firebase
+               firebase.initializeApp(firebaseConfig);
+               firebase.analytics();
+           </script>
+
+           <script>
+                // getting the text value from the database
+                var objRef = firebase.database().ref().child('BLUE_LED_STATUS'); // LED 상태를 가져오기 위한 소스
+                objRef.on("child_added", function(snapshot) { // 데이터 베이스 값을 가져옴
+                })
+                var dbRef = firebase.database().ref().child('BLUE_LED_STATUS'); // ONOFF하기 위하여 필요함
+
+                function onFunction() { // ON을 하기 위해 셋팅 해주는 것
+                    dbRef.set('ON')
+                }
+
+                function offFunction() { // OFF을 하기 위해 셋팅 해주는 것
+                    dbRef.set('OFF')
+                }
+                // write data
+
+                // database 값이 변하면 이벤트 발생
+                dbRef.on("value", function(snapshot) {
+                  if (snapshot.val() == 'OFF') {
+                    LEDstate.innerText = 'OFF';
+                  } else if (snapshot.val() == 'ON') {
+                    LEDstate.innerText = 'ON';
+                  }
+                }, function (error) { // 만일 에러가 난다면 콘솔로 에러코드를 알려주기 위함.
+                  console.log("Error: " + error.code);
+                });
+      </script>
+    </body>
+</html>

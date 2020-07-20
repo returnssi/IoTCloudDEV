@@ -1,0 +1,206 @@
+<html>
+<style>
+body {
+  background-image: url("background.jpg");
+}
+
+#d1 {
+  margin:100px center;
+  position: center;
+}
+
+</style>
+
+
+<head>
+    <title>온습도 모니터링 </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+
+<div id= "d1" class="p-3 mb-2 bg-dark text-white" style="display: inline-block;text-align: center;">
+    <h5>온습도 모니터링(201412424최영환)</h5>
+    <p>
+    <h6>클라우드컴퓨팅실습(김종현 교수님)</h6>
+    <h6 id="time"> </h6>
+    </p>
+</div>
+<br>
+
+<div class="container-fluid" style="display: inline-block;text-align: center; position:relative; margin:0 auto;">
+    <div class="row">
+        <div class="p-4 mb-2 bg-primary text-white">
+            <h4 id="temp"> </h4>
+            <p>동의과학대학교</p>
+            <!-- 프로그래스바-->
+
+            <div class="progress">
+                <div id="t" class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+            </div>
+        <br>
+        </div>
+        <div class="p-4 mb-2 bg-secondary text-whit" style="display: inline-block;text-align: center;">
+            <h4 id="humi"> </h4>
+            <p>컴퓨터정보과</p>
+
+            <div id="humibar" class="progress">
+                <div id="h" class="progress-bar2 progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+            </div><br>
+        </div>
+    </div>
+   </div>
+<div id="chartContainer" style="height: 350px; width: 100%;">
+</div>
+<img src="https://w.namu.la/s/8b6f4669dfcad808540d1350137fc6a00be6e16f64e7e8062eca5956cb94fee9e60c037a877c09370e480223f43c4ae57dff19632b5c6faefcd7e1f75be20270ef9e1fe3c7e1ae25e767e945123225908101d05a39e102e185967a5821542231" style="max-width: 100%; height: auto;"/>
+</body>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+
+<!-- canvasjs -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+
+<script>
+        // 파이어베이스 정보와 연동을 합니다.
+        var firebaseConfig = {
+            apiKey: "AIzaSyBsId_fkenCb4OVmyJ6JtbPsEif3aklLUs",
+            authDomain: "sensorfirebase-a3c65.firebaseapp.com",
+            databaseURL: "https://sensorfirebase-a3c65.firebaseio.com",
+            projectId: "sensorfirebase-a3c65",
+            storageBucket: "sensorfirebase-a3c65.appspot.com",
+            messagingSenderId: "234202372340",
+            appId: "1:234202372340:web:4205dd74738d89066ea6a1",
+            measurementId: "G-CCD2JD6DZ7"
+        };
+
+        // 파이어베이스 초기화
+        firebase.initializeApp(firebaseConfig);
+
+        // 온습도 데이터들을 받아들여옴
+        firebase.database().ref().child('odinbox/').on("child_added", function(snapshot) {
+      console.log(snapshot.val());
+      var newHumi = snapshot.val().humidity;
+      var newTemp = snapshot.val().temperature;
+      var newTime = snapshot.val().time;
+
+      // 습도, 온도, 시간을 html에 쓸 수 있게 합니다.
+      humi.innerText = "습도 : " + newHumi + "%";
+      temp.innerText = "온도 : " + newTemp + "℃";
+      time.innerText = "시간 : " + newTime;
+
+      var t = 0;
+      var h = 0;
+
+      function makeProgress(){
+            if(t < 100){
+              t = newTemp;
+                $(".progress-bar").css("width", t + "%").text(t + " %");
+            }
+            setTimeout("makeProgress()", 100);
+        }
+        makeProgress();
+
+        function makeProgress2(){
+            if(h < 100){
+              h = newHumi;
+                $(".progress-bar2").css("width", h + "%").text(h + " %");
+            }
+
+
+            setTimeout("makeProgress2()", 100);
+        }
+        makeProgress2();
+
+    })
+
+        // CnavasJS.Chart 객체 생성 및 사용
+        var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light1",
+                title: {
+                text: "실시간 온습도센서 - 차트",
+                fontColor: '#03254E',
+            },
+            legend: {
+        		    fontSize: 15
+          	},
+            axisX: {
+                title: "Time",
+                titleFontSize: 14,
+                titleFontColor: '#03254E',
+                valueFormatString: 'HH:mm:ss',
+                labelFontColor: '#03254E',
+            },
+            axisY: {
+                valueFormatString: "0.0#",
+                minimum: 0,
+                maximum: 100,
+                title: "온도(°C) 습도(%)",
+                titleFontColor: '#03254E',
+                titleFontSize: 14,
+                labelFontColor: '#03254E',
+            },
+            toolTip: {
+                shared: true,
+                contentFormatter: function(e) {
+                    var content = CanvasJS.formatDate(e.entries[0].dataPoint.x, "HH:mm:ss") + "<br>";
+                    content += "<strong>온도</strong>: " + e.entries[0].dataPoint.y + " &deg;C<br>";
+                    content += "<strong>습도</strong>: " + e.entries[1].dataPoint.y + " %";
+                    return content;
+                }
+            },
+            animationEnabled: true,
+            data: [{
+                type: "spline", // 라인이나 파이로 설정 할 수 있습니다.
+                legendText: "온도",
+                showInLegend: true,
+                markerColor: "#4682B4",
+                markerSize: 1,
+                // type: "splineArea",
+			          // color: "rgba(83, 223, 128, .6)",
+                dataPoints: []
+            }, {
+                type: "spline", // 라인이나 파이로 설정 할 수 있습니다.
+                legendText: "습도",
+                showInLegend: true,
+                markerSize: 1,
+                dataPoints: []
+            }]
+
+        });
+
+        // 데이터베이스의 값들을 가져옵니다.
+        var dbRef = firebase.database().ref('odinbox/');
+
+        dbRef.on('child_added', function(snapshot) {
+            var row = snapshot.val();
+            row.time = new Date(row.time);
+            chart.options.data[0].dataPoints.push({
+                x: row.time,
+                y: row.temperature
+            });
+            chart.options.data[1].dataPoints.push({
+                x: row.time,
+                y: row.humidity
+            });
+            chart.render();
+        });
+    </script>
+
+
+</body>
+</html>

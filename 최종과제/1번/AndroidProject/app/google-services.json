@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "234202372340",
+    "firebase_url": "https://sensorfirebase-a3c65.firebaseio.com",
+    "project_id": "sensorfirebase-a3c65",
+    "storage_bucket": "sensorfirebase-a3c65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234202372340:android:f089787479399ece6ea6a1",
+        "android_client_info": {
+          "package_name": "com.odin.ledfinalproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234202372340-gmlg3ngdersherac0aedrsre4rce7fnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRmgo-BF63Oybg64ESiMqHCg9RnSUgC7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234202372340-gmlg3ngdersherac0aedrsre4rce7fnp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234202372340:android:f924e5d9d7acbc6a6ea6a1",
+        "android_client_info": {
+          "package_name": "com.odin.sesnorfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234202372340-gmlg3ngdersherac0aedrsre4rce7fnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRmgo-BF63Oybg64ESiMqHCg9RnSUgC7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234202372340-gmlg3ngdersherac0aedrsre4rce7fnp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

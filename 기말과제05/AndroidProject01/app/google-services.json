@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "329513426485",
+    "firebase_url": "https://fir-led-control-cefd3.firebaseio.com",
+    "project_id": "fir-led-control-cefd3",
+    "storage_bucket": "fir-led-control-cefd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329513426485:android:d31733661bc8c675785b7c",
+        "android_client_info": {
+          "package_name": "com.example.button_click_event"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329513426485-qad91jv327jskiqso7hh3huetdpnh6pc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7PvKSdrt2eJdu2MCaL5xesTLqD6UhwTY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329513426485-qad91jv327jskiqso7hh3huetdpnh6pc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

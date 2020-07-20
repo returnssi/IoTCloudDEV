@@ -1,0 +1,143 @@
+<html>
+<style>
+body {
+  background-image: url("background.jpg");
+}
+
+#d1 {
+  margin:100px center;
+  position: center;
+}
+
+</style>
+
+
+<head>
+    <title>온습도 모니터링 </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+
+<div id= "d1" class="p-3 mb-2 bg-info text-white" style="display: inline-block;text-align: center;">
+    <h4>실시간 온습도체크 (201412424최영환)</h4>
+    <p>
+    <h6>클라우드컴퓨팅실습 (김종현 교수님)</h6>
+    <h6 id="time"> </h6>
+    </p>
+</div>
+<br>
+<!-- <div class="container p-3 my-3 border bg-dark text-white">
+    <h4 id="temp"> </h4>
+    <p>자동으로 새로고침을 실행하고 있습니다.</p>
+  </div>
+  <div class="container p-3 my-3 bg-primary text-white">
+    <h4 id="humi"> </h4>
+    <p>자동으로 새로고침을 실행하고 있습니다.</p>
+  </div> -->
+
+<div class="container-fluid" style="display: inline-block;text-align: center;">
+    <div class="row">
+        <div class="col-sm-6 bg-danger text-white">
+            <h4 id="temp"> </h4>
+            <p>동의과학대학교</p>
+            <!-- 프로그래스바-->
+
+            <div class="progress">
+                <div id="t" class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+            </div><br>
+
+
+
+        </div>
+        <div class="col-sm-6 bg-dark text-white" style="display: inline-block;text-align: center;">
+            <h4 id="humi"> </h4>
+            <p>컴퓨터정보과</p>
+
+            <div id="humibar" class="progress">
+                <div id="h" class="progress-bar2 progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+            </div><br>
+        </div>
+    </div>
+    <img src="https://w.namu.la/s/8b6f4669dfcad808540d1350137fc6a00be6e16f64e7e8062eca5956cb94fee9e60c037a877c09370e480223f43c4ae57dff19632b5c6faefcd7e1f75be20270ef9e1fe3c7e1ae25e767e945123225908101d05a39e102e185967a5821542231" style="max-width: 100%; height: auto;"/>
+</div>
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+
+<script>
+        // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBK92TtTyFMidaYx_Fk24B7DavTaa0PEZk",
+    authDomain: "hellofirebase3-f62f6.firebaseapp.com",
+    databaseURL: "https://hellofirebase3-f62f6.firebaseio.com",
+    projectId: "hellofirebase3-f62f6",
+    storageBucket: "hellofirebase3-f62f6.appspot.com",
+    messagingSenderId: "996692868897",
+    appId: "1:996692868897:web:d68e34ff58c4d455568860",
+    measurementId: "G-17YC1LMRVR"
+  };
+        // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+</script>
+<script>
+
+      // var objRef = firebase.database().ref().child('logDHT/');
+
+    firebase.database().ref().child('logDHT/').on("child_added", function(snapshot) {
+      console.log(snapshot.val());
+      var newHumi = snapshot.val().humidity;
+      var newTemp = snapshot.val().temperature;
+      var newTime = snapshot.val().time;
+      humi.innerText = "습도 : " + newHumi + "%";
+      temp.innerText = "온도 : " + newTemp + "℃";
+      time.innerText = "시간 : " + newTime;
+
+      var t = 0;
+      var h = 0;
+
+      function makeProgress(){
+            if(t < 100){
+              t = newTemp;
+                $(".progress-bar").css("width", t + "%").text(t + " %");
+            }
+            setTimeout("makeProgress()", 100);
+        }
+        makeProgress();
+
+        function makeProgress2(){
+            if(h < 100){
+              h = newHumi;
+                $(".progress-bar2").css("width", h + "%").text(h + " %");
+            }
+
+
+            setTimeout("makeProgress2()", 100);
+        }
+        makeProgress2();
+
+    })
+  </script>
+
+
+</script>
+
+
+</body>
+</html>

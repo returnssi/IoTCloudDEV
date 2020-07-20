@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+    <style type="text/css">
+div {
+    display: block;
+}
+    </style>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>실시간 온습도 모니터링[개발:최영환]</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js">
+
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js">
+
+	</script>
+</head>
+<body>
+  <!-- 상단 헤드 시작-->
+  <header>
+  <div class="bg-dark collapse" id="navbarHeader" style="">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">소개</h4>
+          <p class="text-muted">실시간 온습도 모니터링을 할 수 있습니다. 온도/습도를 실시간으로 알 수 있고 보기 쉽게 차트로 표현됩니다.</p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">개발자[최영환]</h4>
+          <ul class="list-unstyled">
+            <li><a href="mailto:member@tistory.com" class="text-white">이메일보내기</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <img src="ditlogo.png" width="50" height="40" alt="동의과학대학교 컴퓨터정보과">
+        <strong>온습도 모니터링</strong>
+      </a>
+      <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
+<!-- 상단 헤드 끝 -->
+
+<!-- 간단한 안내 -->
+<section class="jumbotron text-center">
+    <div class="container">
+      <h1>쉽고 간편한 온습도 모니터링</h1>
+      <p class="lead text-muted">사용자는 실시간으로 자신이 원하는 곳의 온도와 습도를 모니터링 할 수 있습니다!
+      <br>
+      201412424 최영환 - 지도 교수 : 김종현 교수님</p>
+      <h6 id="time"> </h6>
+    </div>
+  </section>
+<!-- 간단한 안내 끝 -->
+
+  <!-- Main Content -->
+  <div class="row mb-2">
+    <div class="col-md-6">
+      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-primary">온도</strong>
+          <h3 class="mb-0">온도가 어떻게 되나요 ?</h3>
+          <div class="mb-1 text-muted">실시간 온도를 알려드립니다.</div>
+          <p id="temp"> </p>
+          <div class="progress">
+            <div id="t" class="progress-bar progress-bar-striped" style="min-width: 20px;"><br></div>
+        </div>
+        </div>
+        <div class="col-auto d-none d-lg-block">
+            <img src="dit01.jpeg" width="250" height="250" alt="동의과학대학교">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <strong class="d-inline-block mb-2 text-success">습도</strong>
+          <h3 class="mb-0">습도는 어떻게 되나요?</h3>
+          <div class="mb-1 text-muted">실시간 습도를 알려드립니다.</div>
+          <p id="humi"> </p>
+          <div id="humibar" class="progress">
+            <div id="h" class="progress-bar2 progress-bar progress-bar-striped" style="min-width: 20px;"><br></div>
+        </div>
+        </div>
+        <div class="col-auto d-none d-lg-block" >
+            <img src="dit02.jpg" width="250" height="250" alt="동의과학대학교 컴퓨터정보과">
+          
+        </div>
+      </div>
+    </div>
+  </div> 
+ 
+  <div id="chartContainer" style="height: 350px; width: 100%;">
+</div>
+  <!-- Main Content End -->
+
+<!-- 하단 안내 -->
+<div class="container">
+    <p class="float-right">
+      <a href="#">상단으로</a>
+    </p>
+    <p>Source by CSS/Bootstrap/FireBase/CanvasJS/NodeMCU - Powerd by OdinBOX</p>
+  </div>
+<!-- 하단 안내 끝 -->
+
+
+
+<!-- 스크립트 소스 -->
+
+ <!-- The core Firebase JS SDK is always required and must be listed first -->
+ <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-analytics.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+
+    <!-- CanvasJS 파일 설정 -->
+    <script type="text/javascript" src="canvasjs.min.js"></script>
+
+    <script>
+        // 웹에 쓸 수 있는 파이어베이스 구성
+        var firebaseConfig = {
+            apiKey: "AIzaSyBsId_fkenCb4OVmyJ6JtbPsEif3aklLUs",
+            authDomain: "sensorfirebase-a3c65.firebaseapp.com",
+            databaseURL: "https://sensorfirebase-a3c65.firebaseio.com",
+            projectId: "sensorfirebase-a3c65",
+            storageBucket: "sensorfirebase-a3c65.appspot.com",
+            messagingSenderId: "234202372340",
+            appId: "1:234202372340:web:4205dd74738d89066ea6a1",
+            measurementId: "G-CCD2JD6DZ7"
+        };
+
+        // 파이어베이스 초기화
+        firebase.initializeApp(firebaseConfig);
+
+        // 온습도 데이터들을 받아들여옴
+        firebase.database().ref().child('odinbox/').on("child_added", function(snapshot) {
+      console.log(snapshot.val());
+      var newHumi = snapshot.val().humidity;
+      var newTemp = snapshot.val().temperature;
+      var newTime = snapshot.val().time;
+      // 습도, 온도, 시간을 텍스트와 연결하여 표현함
+      humi.innerText = "습도 : " + newHumi + "%";
+      temp.innerText = "온도 : " + newTemp + "℃";
+      time.innerText = "시간 : " + newTime;
+
+      var t = 0;
+      var h = 0;
+
+      function makeProgress(){ // 프로그래스바 생성 - 온도
+            if(t < 100){
+              t = newTemp;
+                $(".progress-bar").css("width", t + "%").text(t + " %");
+            }
+            setTimeout("makeProgress()", 100);
+        }
+        makeProgress();
+
+        function makeProgress2(){ // 프로그래스바 생성 - 습도
+            if(h < 100){
+              h = newHumi;
+                $(".progress-bar2").css("width", h + "%").text(h + " %");
+            }
+
+
+            setTimeout("makeProgress2()", 100);
+        }
+        makeProgress2();
+
+    })
+
+        // CnavasJS.Chart 객체 생성 및 사용
+        var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light1",
+                title: {
+                text: "실시간 온습도센서 - 차트",
+                fontColor: '#03254E',
+            },
+            legend: {
+        		    fontSize: 15
+          	},
+            axisX: { // x축에 시간을 표시함
+                title: "Time",
+                titleFontSize: 14,
+                titleFontColor: '#03254E',
+                valueFormatString: 'HH:mm:ss',
+                labelFontColor: '#03254E',
+            },
+            axisY: { // y축에 온도와 습도를 표시함
+                valueFormatString: "0.0#",
+                minimum: 0,
+                maximum: 100,
+                title: "온도(°C) 습도(%)",
+                titleFontColor: '#03254E',
+                titleFontSize: 14,
+                labelFontColor: '#03254E',
+            },
+            toolTip: {
+                shared: true,
+                contentFormatter: function(e) { // 커서를 올리면 나타나는 정보
+                    var content = CanvasJS.formatDate(e.entries[0].dataPoint.x, "HH:mm:ss") + "<br>";
+                    content += "<strong>온도</strong>: " + e.entries[0].dataPoint.y + " &deg;C<br>";
+                    content += "<strong>습도</strong>: " + e.entries[1].dataPoint.y + " %";
+                    return content;
+                }
+            },
+            animationEnabled: true,
+            data: [{
+                type: "spline", //선이나 기둥, 영역 등으로 변환할 수 있음
+                legendText: "온도",
+                showInLegend: true,
+                markerColor: "#4682B4",
+                markerSize: 1,
+                // type: "splineArea",
+			          // color: "rgba(83, 223, 128, .6)",
+                dataPoints: []
+            }, {
+                type: "spline", // 선이나 기둥, 영역 등으로 변환할 수 있음
+                legendText: "습도",
+                showInLegend: true,
+                markerSize: 1,
+                dataPoints: []
+            }]
+
+        });
+
+        // 데이터베이스에서 텍스트 값을 얻습니다
+        var dbRef = firebase.database().ref('odinbox/');
+
+        dbRef.on('child_added', function(snapshot) {
+            var row = snapshot.val();
+            row.time = new Date(row.time);
+            chart.options.data[0].dataPoints.push({
+                x: row.time,
+                y: row.temperature
+            });
+            chart.options.data[1].dataPoints.push({
+                x: row.time,
+                y: row.humidity
+            });
+            chart.render();
+        });
+    </script>
+<!-- 스크립트 소스 끝 -->
+
+
+</body>
+
+</html>

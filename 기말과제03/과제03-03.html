@@ -1,0 +1,126 @@
+<html>
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+
+  <div class="container p-3 my-3 border">
+    <h1>실시간 온습도체크 (최영환)</h1>
+    <p>
+      <h4>클라우드컴퓨팅실습 (김종현 교수님)</h4>
+    </p>
+  </div>
+    <br>
+    <!-- <div class="container p-3 my-3 border bg-dark text-white">
+        <h4 id="temp"> </h4>
+        <p>자동으로 새로고침을 실행하고 있습니다.</p>
+      </div>
+      <div class="container p-3 my-3 bg-primary text-white">
+        <h4 id="humi"> </h4>
+        <p>자동으로 새로고침을 실행하고 있습니다.</p>
+      </div> -->
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-6 bg-success">
+            <h4 id="temp"> </h4>
+            <p>자동으로 새로고침을 실행하고 있습니다.</p>
+            <!-- 프로그래스바-->
+
+            <div class="progress">
+              <div id="t" class="progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+          </div><br>
+
+  
+
+          </div>
+          <div class="col-sm-6 bg-primary">
+            <h4 id="humi"> </h4>
+        <p>자동으로 새로고침을 실행하고 있습니다.</p>
+
+        <div id="humibar" class="progress">
+          <div id="h" class="progress-bar2 progress-bar progress-bar-striped" style="min-width: 20px;"></div>
+      </div><br>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-database.js"></script>
+
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+                  apiKey: "AIzaSyD9k7X9s9UMue5qfKBDkfxlM-Ca-lsgiUE",
+                  authDomain: "fir-dhtexam.firebaseapp.com",
+                  databaseURL: "https://fir-dhtexam.firebaseio.com",
+                  projectId: "fir-dhtexam",
+                  storageBucket: "fir-dhtexam.appspot.com",
+                  messagingSenderId: "618085180646",
+                  appId: "1:618085180646:web:14af0a3cbae14778cd0727",
+                  measurementId: "G-3MJPM6R1YW"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+<script>
+   
+    // var objRef = firebase.database().ref().child('logDHT/');
+
+    firebase.database().ref().child('logDHT/').on("child_added", function(snapshot) {
+      console.log(snapshot.val());
+      var newHumi = snapshot.val().humidity;
+      var newTemp = snapshot.val().temperature;
+      humi.innerText = "습도 : " + newHumi + "%";
+      temp.innerText = "온도 : " + newTemp + "℃";
+      
+      var t = 0;
+      var h = 0;
+
+      function makeProgress(){
+            if(t < 100){
+              t = newTemp;
+                $(".progress-bar").css("width", t + "%").text(t + " %");
+            }
+            setTimeout("makeProgress()", 100);
+        }
+        makeProgress();
+
+        function makeProgress2(){
+            if(h < 100){
+              h = newHumi;
+                $(".progress-bar2").css("width", h + "%").text(h + " %");
+            }
+            
+
+            setTimeout("makeProgress2()", 100);
+        }
+        makeProgress2();
+    
+    })
+  </script>
+
+   
+</script>
+
+
+</body>
+</html>
